@@ -1,0 +1,8 @@
+package;
+
+class FormatTest type Object
+{
+    variable name String;
+    variable age Int;
+    function callback(argument String) Void;
+}

@@ -1,0 +1,34 @@
+package;
+
+import |haxe| Sys;
+
+class FormatTest type Script
+{
+    public variable name String = "the Coolest Script";
+
+    public variable age Int = 314;
+
+    public variable |am i fine| Boolean = false;
+
+    public constructor()
+    {
+        trace('Hello!, my name is $name');
+        trace('I'm $age years old');
+
+        trace(|am i fine| ?? "and everything is ok" :: "i hate my life");
+
+        /**
+         * Windows
+         * Linux
+         * Mac
+        */
+        trace(Sys.systemName());
+
+        trace(|return a value|("variable and function names with spaces...")); // variable and function names with spaces...
+    }
+
+    private function |return a value|(argument String) Void
+    {
+        return argument;
+    }
+}
