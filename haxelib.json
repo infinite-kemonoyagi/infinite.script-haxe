@@ -3,9 +3,8 @@
     "url": "https://github.com/infinite-kemonoyagi/infinite-haxe-script/",
     "license": "MIT",
     "tags": ["script", "infinite"],
-    "description": "another generic script for haxe",
+    "description": "Another generic scripted classes for haxe without using Hscript",
     "version": "0.0.1",
-    "classPath": "infiscript/",
     "releasenote": "Initial release",
     "contributors": ["Infinite-Kemonoyagi"]
 }
