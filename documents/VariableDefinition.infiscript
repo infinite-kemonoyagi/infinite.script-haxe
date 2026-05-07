@@ -1,0 +1,3 @@
+variable name String = "5";
+
+trace(name);

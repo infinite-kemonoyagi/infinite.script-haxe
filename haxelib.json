@@ -1,6 +1,7 @@
 {
     "name": "infiscript",
     "url": "https://github.com/infinite-kemonoyagi/infinite-haxe-script/",
+    "classPath": "infinite/",
     "license": "MIT",
     "tags": ["script", "infinite"],
     "description": "Another generic scripted classes for haxe without using Hscript",
