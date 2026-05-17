@@ -20,7 +20,7 @@ class InfiScriptParser
         this.lexer ??= lexer ?? new InfiScriptLexer();
     }
 
-    public function runSimpleCode(code:String, traceData:Bool = false):Void
+    public function runScriptedCode(code:String, traceData:Bool = false):Void
     {
         position = 0;
         #if !debug traceData = false; #end
@@ -47,6 +47,12 @@ class InfiScriptParser
 
         while(!isAtTheEnd())
         {
+            if (peek().type == InfiScriptAST.Semicolon)
+            {
+                ++position;
+                continue;
+            }
+
             if (peek().type == InfiScriptAST.Keyword)
             {
                 final field:InfiScriptField = createField();
@@ -70,6 +76,14 @@ class InfiScriptParser
                 {
                     final arguments:Array<Any> = getCalledFuncArgs(name, variables);
                     functions.get(name).call(arguments);
+                }
+                if (variables.exists(name))
+                {
+                    if (next().type == InfiScriptAST.Equal)
+                    {
+                        position += 2;
+                        variables.get(name).value = getValue(peek());
+                    }
                 }
             }
 
@@ -116,7 +130,7 @@ class InfiScriptParser
                 if (next().source != "new")
                 {
                     type = getDynamicType();
-                    value = next().source;
+                    value = getValue();
                 }
             }
             else
@@ -176,15 +190,16 @@ class InfiScriptParser
             default: throw 'Syntax error';
         };
     }
-    private function getValue():Null<Any>
+    private function getValue(?token:InfiScriptToken):Null<Any>
     {
-        return switch next().type
+        if (token == null) token = next();
+        return switch token.type
         {
             case NullValue:   null;
-            case StringValue: next().source;
-            case IntValue:    Std.parseInt(next().source);
-            case FloatValue:  Std.parseFloat(next().source);
-            case BoolValue:   next().source == "true" || next().source == "1";
+            case StringValue: token.source;
+            case IntValue:    Std.parseInt(token.source);
+            case FloatValue:  Std.parseFloat(token.source);
+            case BoolValue:   token.source == "true" || token.source == "1";
             case ArrayValue:  null; // nothing at the moment...
             default: throw 'Syntax error';
         };

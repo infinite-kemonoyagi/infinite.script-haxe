@@ -13,6 +13,6 @@ class Main
 
         final variableCode:String = File.getContent('./debug/Variable.infiscript');
 
-        parser.runSimpleCode(variableCode, true);
+        parser.runScriptedCode(variableCode);
     }
 }
