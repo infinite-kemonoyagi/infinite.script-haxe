@@ -17,12 +17,19 @@ class InfiScriptParser
         this.lexer ??= lexer ?? new InfiScriptLexer();
     }
 
-    public function runSimpleCode(code:String):Void
+    public function runSimpleCode(code:String, traceData:Bool = false):Void
     {
         position = 0;
+        #if !debug traceData = false; #end
+
+        if (traceData) trace('parsing the next code: $code');
 
         lexer.loadFromSource(code);
-        trace(lexer.tokens);
+        if (traceData)
+        {
+            for (token in lexer.tokens) trace('token | type: ${token.type} | source: ${token.source}');
+            trace("\n");
+        }
 
         final variables:Array<InfiScriptVariable> = [];
 
@@ -36,6 +43,11 @@ class InfiScriptParser
                 {
                     final variable:InfiScriptVariable = cast field;
                     variables.push(variable);
+                    if (traceData)
+                    {
+                        trace("detected a variable\n");
+                        trace('variable | name: ${variable.name} | type: ${variable.type} | value: ${variable.value}');
+                    }
                 }
             }
 

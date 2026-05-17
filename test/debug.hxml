@@ -1,0 +1,4 @@
+-lib infiscript
+--debug
+
+--run test.Main
