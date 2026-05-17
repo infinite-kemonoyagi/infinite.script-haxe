@@ -1,17 +1,14 @@
 package test;
 
 import infinite.script.interpreter.InfiScriptLexer;
+import infinite.script.parser.InfiScriptParser;
 
 class Main
 {
     public static function main():Void
     {
         final lexer:InfiScriptLexer = new InfiScriptLexer();
-        lexer.loadFromSource("variable name = \"Hello, World!\"; \ntrace(name);");
-
-        for (token in lexer.tokens)
-        {
-            trace('type: ${token.type}, line: ${token.line}, pos: ${token.position}, content: ${token.source}');
-        }
+        final parser:InfiScriptParser = new InfiScriptParser();
+        parser.runSimpleCode("variable name = \"Hello, World!\";");
     }
 }
