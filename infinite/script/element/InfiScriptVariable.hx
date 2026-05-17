@@ -1,7 +1,6 @@
 package infinite.script.element;
 
-@:generic
-class InfiScriptVariable<T:Any> extends InfiScriptField
+class InfiScriptVariable extends InfiScriptField
 {
     /**
      * variable's type
@@ -27,32 +26,30 @@ class InfiScriptVariable<T:Any> extends InfiScriptField
      *
      * if the type can't be inferred, will be a Dynamic type
      */
-    public var type(get, never):Class<T>;
+    public var type:Class<Any>;
 
     /**
      * variable's value.
      *
      * if the variable is declared as final it can only assign a value in the declaration (or in the constructor)
      */
-    public var value:Null<T>;
+    public var value:Null<Any>;
 
     /**
      * variable's getter method
      */
-    public var getter:Null<Void->Null<T>>;
+    public var getter:Null<Void->Null<Any>>;
     /**
      * variable's setter method
      */
-    public var setter:Null<T->Null<T>>;
+    public var setter:Null<Any->Null<Any>>;
 
-    public function new(name:String, value:Null<T>, ?getter:Void->Null<T>, ?setter:T->Null<T>)
+    public function new(name:String, type:Null<Class<Any>>, value:Null<Any>, ?getter:Void->Null<Any>, ?setter:Any->Null<Any>)
     {
         super(name);
 
         this.value ??= value;
         this.getter ??= getter ?? () -> value;
-        this.setter ??= setter ?? (newValue:T) -> value = newValue;
+        this.setter ??= setter ?? (newValue:Any) -> value = newValue;
     }
-
-    private function get_type():Class<T> return Type.getClass(value);
 }

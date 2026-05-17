@@ -8,8 +8,8 @@ class InfiScriptClass
 
     public var imports:Array<InfiScriptImport>;
 
-    public var functions:Array<InfiScriptFuncion<Any>>;
-    public var variables:Array<InfiScriptVariable<Any>>;
+    public var functions:Array<InfiScriptFunction>;
+    public var variables:Array<InfiScriptVariable>;
 
     public function new(name:String, ?currentPackage:String, ?imports:Array<InfiScriptImport>)
     {

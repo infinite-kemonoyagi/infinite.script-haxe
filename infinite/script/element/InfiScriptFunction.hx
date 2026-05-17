@@ -2,8 +2,7 @@ package infinite.script.element;
 
 import infinite.script.interpreter.token.InfiScriptToken;
 
-@:generic
-class InfiScriptFuncion<T:Any> extends InfiScriptField
+class InfiScriptFunction extends InfiScriptField
 {
     /**
      * function's type
@@ -32,9 +31,7 @@ class InfiScriptFuncion<T:Any> extends InfiScriptField
      *
      * if the type can't be inferred, will be a Dynamic type
      */
-    public var type(get, never):Class<T>;
-
-    private var _type:Class<T>;
+    public var type:Class<Any>;
 
     /**
      * the function's code
@@ -51,15 +48,13 @@ class InfiScriptFuncion<T:Any> extends InfiScriptField
      * }
      * ```
      */
-    public var arguments:Null<Array<InfiScriptVariable<Any>>>;
+    public var arguments:Null<Array<InfiScriptVariable>>;
 
-    public function new(name:String, type:Class<T>, tokens:Array<InfiScriptToken>, ?arguments:Array<InfiScriptVariable<Any>>)
+    public function new(name:String, type:Class<Any>, ?arguments:Array<InfiScriptVariable>)
     {
         super(name);
-        this._type = type;
-        this.tokens = tokens;
+        this.type = type;
+        this.tokens = [];
         this.arguments ??= arguments;
     }
-
-    private function get_type():Class<T> return _type;
 }
