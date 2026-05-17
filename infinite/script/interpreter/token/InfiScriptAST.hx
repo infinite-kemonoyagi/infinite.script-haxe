@@ -47,7 +47,11 @@ enum InfiScriptAST
     /**
      * +=
      */
-    PlusEqual;
+    PlusEqual
+    /**
+     * ++
+     */;
+    Increase;
     /**
      * -
      */
@@ -56,6 +60,10 @@ enum InfiScriptAST
      * -=
      */
     MinusEqual;
+    /**
+     * --
+     */
+    Decrease;
     /**
      * *
      */
