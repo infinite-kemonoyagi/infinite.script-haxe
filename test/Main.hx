@@ -9,6 +9,6 @@ class Main
     {
         final lexer:InfiScriptLexer = new InfiScriptLexer();
         final parser:InfiScriptParser = new InfiScriptParser();
-        parser.runSimpleCode("variable name = \"Hello, World!\";", true);
+        parser.runSimpleCode("variable name = \"Hello, World!\";\ntrace(name);", true);
     }
 }

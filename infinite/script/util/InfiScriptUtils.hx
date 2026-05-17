@@ -8,4 +8,6 @@ class InfiScriptUtils
         "variable", "function",
         "if", "else", "for", "while", "do", "try", "catch", "switch", "case"
     ];
+
+    public static var reservedFunctions:Array<String> = ["trace"];
 }

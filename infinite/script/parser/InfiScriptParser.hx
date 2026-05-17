@@ -1,10 +1,13 @@
 package infinite.script.parser;
 
+import haxe.ds.StringMap;
 import infinite.script.element.InfiScriptField;
+import infinite.script.element.InfiScriptFunction;
 import infinite.script.element.InfiScriptVariable;
 import infinite.script.interpreter.InfiScriptLexer;
 import infinite.script.interpreter.token.InfiScriptAST;
 import infinite.script.interpreter.token.InfiScriptToken;
+import infinite.script.reserved.TraceFunction;
 
 class InfiScriptParser
 {
@@ -22,7 +25,13 @@ class InfiScriptParser
         position = 0;
         #if !debug traceData = false; #end
 
-        if (traceData) trace('parsing the next code: $code');
+        if (traceData)
+        {
+            trace('parsing the next code:');
+            final codeSplitted:Array<String> = code.split('\n');
+            for (s in codeSplitted) trace('\t$s');
+            trace("\n");
+        }
 
         lexer.loadFromSource(code);
         if (traceData)
@@ -31,7 +40,10 @@ class InfiScriptParser
             trace("\n");
         }
 
-        final variables:Array<InfiScriptVariable> = [];
+        final variables:StringMap<InfiScriptVariable> = new StringMap();
+        final functions:StringMap<InfiScriptFunction> = new StringMap();
+
+        functions.set("trace", new TraceFunction());
 
         while(!isAtTheEnd())
         {
@@ -42,12 +54,22 @@ class InfiScriptParser
                 if (field is InfiScriptVariable)
                 {
                     final variable:InfiScriptVariable = cast field;
-                    variables.push(variable);
+                    variables.set(variable.name, variable);
                     if (traceData)
                     {
                         trace("detected a variable\n");
                         trace('variable | name: ${variable.name} | type: ${variable.type} | value: ${variable.value}');
                     }
+                }
+            }
+
+            if (peek().type == InfiScriptAST.Identifier)
+            {
+                final name = peek().source;
+                if (functions.exists(name))
+                {
+                    final arguments:Array<Any> = getCalledFuncArgs(name, variables);
+                    functions.get(name).call(arguments);
                 }
             }
 
@@ -117,6 +139,28 @@ class InfiScriptParser
         }
 
         return null;
+    }
+
+    private function getCalledFuncArgs(name:String, variables:StringMap<InfiScriptVariable>):Array<Any>
+    {
+        if (next().type != InfiScriptAST.LParen) throw 'Syntax error';
+
+        position += 2;
+
+        var arguments:Array<Any> = [];
+
+        while (peek().type != InfiScriptAST.RParen)
+        {
+            if (peek().type == InfiScriptAST.Identifier)
+            {
+                if (!variables.exists(peek().source)) throw 'Syntax error';
+                arguments.push(variables.get(peek().source).value);
+            }
+            else arguments.push(getValue());
+            ++position;
+        }
+
+        return arguments;
     }
 
     private function getDynamicType():Null<String>
