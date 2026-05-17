@@ -128,12 +128,22 @@ class InfiScriptLexer
                     distPosition = 2;
                     return new InfiScriptToken(PlusEqual, line, position, peek() + next());
                 }
+                else if (next() == "+")
+                {
+                    distPosition = 2;
+                    return new InfiScriptToken(Increase, line, position, peek() + next());
+                }
                 return new InfiScriptToken(Plus, line, position, peek());
             case "-":
                 if (next() == "=")
                 {
                     distPosition = 2;
                     return new InfiScriptToken(MinusEqual, line, position, peek() + next());
+                }
+                else if (next() == "-")
+                {
+                    distPosition = 2;
+                    return new InfiScriptToken(Decrease, line, position, peek() + next());
                 }
                 return new InfiScriptToken(Minus, line, position, peek());
             case "*":
