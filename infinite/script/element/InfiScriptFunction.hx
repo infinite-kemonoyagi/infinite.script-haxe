@@ -31,7 +31,7 @@ class InfiScriptFunction extends InfiScriptField
      *
      * if the type can't be inferred, will be a Dynamic type
      */
-    public var type:Class<Any>;
+    public var type:String;
 
     /**
      * the function's code
@@ -50,7 +50,7 @@ class InfiScriptFunction extends InfiScriptField
      */
     public var arguments:Null<Array<InfiScriptVariable>>;
 
-    public function new(name:String, type:Class<Any>, ?arguments:Array<InfiScriptVariable>)
+    public function new(name:String, type:String, ?arguments:Array<InfiScriptVariable>)
     {
         super(name);
         this.type = type;

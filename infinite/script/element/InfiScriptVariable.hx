@@ -26,7 +26,7 @@ class InfiScriptVariable extends InfiScriptField
      *
      * if the type can't be inferred, will be a Dynamic type
      */
-    public var type:Class<Any>;
+    public var type:String;
 
     /**
      * variable's value.
@@ -44,11 +44,12 @@ class InfiScriptVariable extends InfiScriptField
      */
     public var setter:Null<Any->Null<Any>>;
 
-    public function new(name:String, type:Null<Class<Any>>, value:Null<Any>, ?getter:Void->Null<Any>, ?setter:Any->Null<Any>)
+    public function new(name:String, type:Null<String>, value:Null<Any>, ?getter:Void->Null<Any>, ?setter:Any->Null<Any>)
     {
         super(name);
 
         this.value ??= value;
+        this.type ??= type ?? "Dynamic";
         this.getter ??= getter ?? () -> value;
         this.setter ??= setter ?? (newValue:Any) -> value = newValue;
     }
