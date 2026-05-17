@@ -1,4 +1,8 @@
--lib infiscript
+--cwd ./test
+
+--library infiscript
+
+--class-path source
 --debug
 
---run test.Main
+--run Main

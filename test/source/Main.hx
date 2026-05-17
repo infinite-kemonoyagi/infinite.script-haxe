@@ -1,7 +1,8 @@
-package test;
+package;
 
 import infinite.script.interpreter.InfiScriptLexer;
 import infinite.script.parser.InfiScriptParser;
+import sys.io.File;
 
 class Main
 {
@@ -9,6 +10,9 @@ class Main
     {
         final lexer:InfiScriptLexer = new InfiScriptLexer();
         final parser:InfiScriptParser = new InfiScriptParser();
-        parser.runSimpleCode("variable name = \"Hello, World!\";\ntrace(name);", true);
+
+        final variableCode:String = File.getContent('./debug/Variable.infiscript');
+
+        parser.runSimpleCode(variableCode, true);
     }
 }

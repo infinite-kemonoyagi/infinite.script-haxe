@@ -1,0 +1,3 @@
+variable name String = "Hello, World!";
+name = "Bye, World!";
+trace(name);
