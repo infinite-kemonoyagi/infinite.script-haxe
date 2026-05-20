@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "node-terminal",
+      "command": "haxe test/debug.hxml",
+      "request": "launch"
+    }
+  ]
+}

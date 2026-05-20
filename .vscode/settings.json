@@ -1,0 +1,15 @@
+{
+  "search.exclude": {
+    "export/**/*.*": true,
+    "builds/**/*.*": true
+  },
+  // this is temporal... anyways, the script language has a similar syntax than haxe
+  "files.associations": { "*.infiscript": "haxe" },
+
+  "prettier.tabWidth": 2,
+  "editor.tabSize": 2,
+
+  "files.insertFinalNewline": true,
+  "prettier.endOfLine": "lf",
+  "files.eol": "\n"
+}
