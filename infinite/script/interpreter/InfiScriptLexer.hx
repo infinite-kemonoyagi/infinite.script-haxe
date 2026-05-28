@@ -39,14 +39,26 @@ class InfiScriptLexer
 
         this.source = source.split("");
 
+        var isSimpleComment:Bool = false;
+
         while (!isAtTheEnd())
         {
+            if (peek() == "\n") isSimpleComment = false;
+
             ignoreWhiteSpace();
 
             if (isAtTheEnd())
             {
                 tokens.push(new InfiScriptToken(Eof, line, position, peek()));
                 break;
+            }
+
+            if (peek() == "/" && next() == "/") isSimpleComment = true;
+
+            if (isSimpleComment)
+            {
+                ++position;
+                continue;
             }
 
             if (InfiUtils.alphabet.contains(peek()) || peek() == "_")
