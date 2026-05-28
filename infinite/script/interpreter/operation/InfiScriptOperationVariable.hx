@@ -1,14 +1,15 @@
 package infinite.script.interpreter.operation;
 
 import infinite.script.element.InfiScriptVariable;
+import infinite.script.interpreter.token.InfiScriptAST;
 
 class InfiScriptOperationVariable extends InfiScriptOperationExpression
 {
   public var data:InfiScriptVariable;
 
-  public function new(?name:String, data:InfiScriptVariable)
+  public function new(data:InfiScriptVariable, ?type:InfiScriptAST)
   {
-    super();
+    super(type);
     this.data = data;
   }
 

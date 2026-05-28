@@ -8,6 +8,7 @@ import infinite.script.interpreter.InfiScriptLexer;
 import infinite.script.interpreter.token.InfiScriptAST;
 import infinite.script.interpreter.token.InfiScriptToken;
 import infinite.script.reserved.TraceFunction;
+import infinite.script.util.InfiScriptUtils;
 
 class InfiScriptParser
 {
@@ -69,6 +70,33 @@ class InfiScriptParser
                 }
             }
 
+            final isAutoOp:Bool = peek().type == InfiScriptAST.Increase
+                || peek().type == InfiScriptAST.Decrease;
+            final nextIsAutoOp:Bool = next() != null && (next().type == InfiScriptAST.Increase
+                || next().type == InfiScriptAST.Decrease);
+
+            if (isAutoOp || nextIsAutoOp)
+            {
+                var variable:InfiScriptVariable = null;
+                var type:InfiScriptAST = null;
+                if (isAutoOp)
+                {
+                    final nextToken:String = next().source;
+                    variable = variables.get(nextToken);
+                    type = peek().type;
+                }
+                else
+                {
+                    variable = variables.get(peek().source);
+                    type = next().type;
+                }
+
+                if (type == Increase) variable.value = (variable.value : Int) + 1;
+                if (type == Decrease) variable.value = (variable.value : Int) - 1;
+
+                position += 2;
+            }
+
             if (peek().type == InfiScriptAST.Identifier)
             {
                 final name = peek().source;
@@ -79,12 +107,55 @@ class InfiScriptParser
                 }
                 if (variables.exists(name))
                 {
+                    final variable:InfiScriptVariable = variables.get(name);
+
                     if (next().type == InfiScriptAST.Equal)
                     {
                         position += 2;
-                        variables.get(name).value = getValue(peek());
+                        variable.value = getValue(peek());
+                    }
+                    else if (InfiScriptUtils.operatorsEqual.contains(next().source))
+                    {
+                        ++position;
+                        if (next().type == IntValue || next().type == FloatValue)
+                        {
+                            switch peek().source
+                            {
+                                case '+=':
+                                    if (variable.type == "Int")
+                                        variable.value = (variable.value : Int) + (getValue() : Int);
+                                    else
+                                        variable.value = (variable.value : Float) + (getValue() : Float);
+                                case '-=':
+                                    if (variable.type == "Int")
+                                        variable.value = (variable.value : Int) - (getValue() : Int);
+                                    else
+                                        variable.value = (variable.value : Float) - (getValue() : Float);
+                                case '*=':
+                                    if (variable.type == "Int")
+                                        variable.value = (variable.value : Int) * (getValue() : Int);
+                                    else
+                                        variable.value = (variable.value : Float) * (getValue() : Float);
+                                case '/=':
+                                    if (variable.type == "Int")
+                                        variable.value = (variable.value : Int) / (getValue() : Int);
+                                    else
+                                        variable.value = (variable.value : Float) / (getValue() : Float);
+                            }
+                        }
+                        else if (next().type == StringValue && peek().type == PlusEqual)
+                        {
+                            variable.value = (variable.value : String) + (getValue() : String);
+                        }
+
+                        position += 2;
                     }
                 }
+            }
+
+            if (InfiScriptUtils.operatorsToken.contains(next().type))
+            {
+
             }
 
             ++position;
@@ -170,7 +241,7 @@ class InfiScriptParser
                 if (!variables.exists(peek().source)) throw 'Syntax error';
                 arguments.push(variables.get(peek().source).value);
             }
-            else arguments.push(getValue());
+            else arguments.push(getValue(peek()));
             ++position;
         }
 
