@@ -85,7 +85,7 @@ class InfiScriptLexer
     private function getIndentifier(source:String):InfiScriptToken
     {
         final start:Int = position;
-        while (InfiUtils.alphabet.contains(peek()) || peek() == "_") ++position;
+        while (InfiUtils.alphabet.contains(peek()) || peek() == "_" && !isAtTheEnd()) ++position;
         final word:String = source.substr(start, position - start);
         if (InfiScriptUtils.keywords.contains(word))
             return new InfiScriptToken(Keyword, line, start, word);
@@ -96,7 +96,7 @@ class InfiScriptLexer
     {
         final start:Int = position + 1;
         ++position;
-        while (peek() != "\"" && peek() != "\'") ++position;
+        while (peek() != "\"" && peek() != "\'" && !isAtTheEnd()) ++position;
         return new InfiScriptToken(StringValue, line, start, source.substr(start, position - start));
     }
 
@@ -106,7 +106,7 @@ class InfiScriptLexer
         final isNegative:Bool = peek() == "-" && InfiUtils.numbers.contains(next());
         if (isNegative) ++position;
         var type:InfiScriptAST = IntValue;
-        while (InfiUtils.digits.contains(peek()))
+        while (InfiUtils.digits.contains(peek()) && !isAtTheEnd())
         {
             if (peek() == ".") type = FloatValue;
             ++position;
