@@ -1,3 +1,9 @@
 variable name String = "Hello, World!";
-name = "Bye, World!";
+name = "Hello, ";
+name += "Haxe!";
 trace(name);
+
+variable number Int = 0;
+number++;
+number *= 4 + 2; // 6
+trace(number);
