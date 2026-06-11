@@ -1,6 +1,6 @@
 package infinite.script.element;
 
-class InfiScriptClass
+class InfiScriptClass extends InfiScriptElement
 {
     public var name:String;
 

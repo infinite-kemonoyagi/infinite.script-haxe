@@ -1,6 +1,6 @@
 package infinite.script.element;
 
-class InfiScriptField
+class InfiScriptField extends InfiScriptElement
 {
     public var name:String;
 
@@ -23,5 +23,12 @@ class InfiScriptField
         isVisible = false;
         isStatic = false;
         isFinal = false;
+    }
+
+    public function setFieldData(isVisible:Bool, isStatic:Bool, isFinal:Bool):Void
+    {
+        this.isVisible = isVisible;
+        this.isStatic = isStatic;
+        this.isFinal = isFinal;
     }
 }

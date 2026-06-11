@@ -1,12 +1,13 @@
 package infinite.script.interpreter.operation;
 
 import haxe.ds.StringMap;
+import infinite.script.element.InfiScriptElement;
 import infinite.script.element.InfiScriptVariable;
 import infinite.script.interpreter.token.InfiScriptAST;
 import infinite.script.interpreter.token.InfiScriptToken;
 import infinite.script.util.InfiScriptUtils;
 
-class InfiScriptOperation
+class InfiScriptOperation extends InfiScriptElement
 {
 	public var tokens:Array<InfiScriptToken>;
 
