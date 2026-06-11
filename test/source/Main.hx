@@ -15,10 +15,10 @@ class Main
 
         trace("Variable code:");
         final code:String = File.getContent('./debug/Variable.infiscript');
-        parser.runScriptedCode(code, true, true);
+        parser.runScriptedCode(code);
 
         trace("Function code:");
         final code:String = File.getContent('./debug/Function.infiscript');
-        parser.runScriptedCode(code, true, true);
+        parser.runScriptedCode(code);
     }
 }

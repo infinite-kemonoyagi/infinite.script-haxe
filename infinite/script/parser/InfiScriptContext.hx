@@ -2,11 +2,13 @@ package infinite.script.parser;
 
 import haxe.ds.StringMap;
 import infinite.script.element.InfiScriptElement;
+import infinite.script.element.InfiScriptField;
 import infinite.script.element.InfiScriptFunction;
 import infinite.script.element.InfiScriptImport;
 import infinite.script.element.InfiScriptVariable;
 import infinite.script.interpreter.token.InfiScriptAST;
 import infinite.script.interpreter.token.InfiScriptToken;
+import infinite.script.util.InfiScriptUtils;
 
 @:access(infinite.script.parser.InfiScriptParser)
 class InfiScriptContext
@@ -37,7 +39,7 @@ class InfiScriptContext
     requestValues = new StringMap();
   }
 
-  private function createField():Void
+  private function createField(?isLocal:Bool = false):InfiScriptField
   {
     // check if the field is a variable or a function
     var isVariable:Null<Bool> = null;
@@ -62,12 +64,12 @@ class InfiScriptContext
     }
     while (isVariable == null || isAtTheEnd());
 
-    if (isVariable) createVariable(isVisible, isStatic, isFinal);
-    else createFunction(isVisible, isStatic, isFinal);
+    return cast if (isVariable) createVariable(isVisible, isStatic, isFinal, false, false, isLocal);
+    else createFunction(isVisible, isStatic, isFinal, isLocal);
   }
 
   private function createVariable(isVisible:Bool, isStatic:Bool, isFinal:Bool, ?isArgument:Bool = false,
-    ?isLocal:Bool = false, ?isOptional:Bool = false):InfiScriptVariable
+    ?isOptional:Bool = false, ?isLocal:Bool = false):InfiScriptVariable
   {
     if (peek().type != InfiScriptAST.Identifier) throw 'variable should have a name';
 
@@ -96,8 +98,13 @@ class InfiScriptContext
 
     final variable:InfiScriptVariable = new InfiScriptVariable(name, type, initialValue);
     variable.setFieldData(isVisible, isStatic, isFinal);
+
     if (!isArgument && !isLocal) variables.set(name, variable);
-    else if (isArgument) variable.setAsArgument(true, isOptional);
+    else if (isArgument)
+    {
+      if (isOptional == null) isOptional = initialValue != null;
+      variable.setAsArgument(true, isOptional);
+    }
     if (peek().type != InfiScriptAST.RParen) increasePosition();
 
     return variable;
@@ -137,6 +144,10 @@ class InfiScriptContext
     final bodyTokens:Array<InfiScriptToken> = [];
     var couldBeVoid:Bool = true;
 
+    var bodyPosition:Int = 0;
+    final storedLocalVariables:StringMap<InfiScriptVariable> = new StringMap();
+    final storedLocalFunctions:StringMap<InfiScriptFunction> = new StringMap();
+
     do
     {
       if (peek().source == "return" && peek().type == InfiScriptAST.Keyword
@@ -147,19 +158,63 @@ class InfiScriptContext
         couldBeVoid = false;
       }
 
+      final token:InfiScriptToken = peek();
+
+      if (token.type == InfiScriptAST.Keyword && InfiScriptUtils.fieldKeywords.contains(token.source))
+      {
+        final initialPosition:Int = parser.position;
+        final initialBodyPosition:Int = bodyPosition;
+
+        final field:InfiScriptField = createField(true);
+        if (field is InfiScriptVariable) storedLocalVariables.set(field.name, cast field);
+        else if (field is InfiScriptFunction) storedLocalFunctions.set(field.name, cast field);
+
+        final differencePosition:Int = parser.position - initialPosition;
+        final differenceBodyPosition:Int = bodyPosition - initialBodyPosition;
+
+        parser.lexer.tokens.splice(initialPosition, differencePosition);
+        parser.position -= differencePosition + 1;
+      }
+
       bodyTokens.push(peek());
       increasePosition();
+      ++bodyPosition;
     }
     while (peek().type != end);
 
     if (couldBeVoid && returns == "Dynamic") returns = "Void";
 
+    for (variable in storedLocalVariables)
+      trace('local variable | name: ${variable.name} | type: ${variable.type} | value: ${variable.value}');
+
+    for (func in storedLocalFunctions)
+      trace('local function | name: ${func.name} | arguments: ${func.arguments} | returns: ${func.type}');
+
     final func:InfiScriptFunction = new InfiScriptFunction(name, returns, arguments);
+    func.localVariables = storedLocalVariables;
+    func.localFunctions = storedLocalFunctions;
     func.tokens = bodyTokens;
     func.setFieldData(isVisible, isStatic, isFinal);
     if (!isLocal) functions.set(name, func);
 
     return func;
+  }
+
+  private function interpretTokensBody(tokens:Array<InfiScriptToken>,
+    ?variables:StringMap<InfiScriptVariable>, ?functions:StringMap<InfiScriptFunction>)
+  {
+    var bodyPosition:Int = 0;
+
+    if (variables == null) variables = this.variables;
+    if (functions == null) functions = this.functions;
+
+    final globalVariables:StringMap<InfiScriptVariable> = this.variables;
+    final globalFunctions:StringMap<InfiScriptFunction> = this.functions;
+
+    while (bodyPosition <= tokens.length - 1)
+    {
+
+    }
   }
 
   private function getTypeFromToken(?token:InfiScriptToken):Null<String>

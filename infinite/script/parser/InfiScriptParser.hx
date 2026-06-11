@@ -6,6 +6,12 @@ import infinite.script.interpreter.token.InfiScriptToken;
 import infinite.script.reserved.TraceFunction;
 import infinite.script.util.InfiScriptUtils;
 
+typedef InfiScriptDebugTrace =
+{
+  var ?tokens:Bool;
+  var ?fields:Bool;
+}
+
 @:access(infinite.script.parser.InfiScriptContext)
 class InfiScriptParser
 {
@@ -22,8 +28,17 @@ class InfiScriptParser
     this.context ??= context ?? new InfiScriptContext(this);
   }
 
-  public function runScriptedCode(code:String, debugMode:Bool = false, ?skipTokensTrace:Bool = false):Void
+  public function runScriptedCode(code:String, debugMode:Bool = false, ?skipTrace:InfiScriptDebugTrace):Void
   {
+    if (skipTrace == null)
+    {
+      skipTrace =
+      {
+        tokens: true,
+        fields: false
+      };
+    }
+
     if (position != 0) position = 0;
     #if !debug debugMode = false; #end
 
@@ -40,7 +55,7 @@ class InfiScriptParser
 
     lexer.loadFromSource(code);
 
-    if (debugMode && !skipTokensTrace)
+    if (debugMode && !skipTrace?.tokens ?? false)
     {
       for (token in lexer.tokens) trace ('token | type: ${token.type} | source: ${token.source}');
       trace('=========================');
@@ -49,7 +64,7 @@ class InfiScriptParser
     context.destroy(); // reset context
     createGlobalFields();
 
-    if (debugMode)
+    if (debugMode && !skipTrace?.fields ?? true)
     {
       trace ('variables');
       for (variable in context.variables)

@@ -7,11 +7,19 @@ simple; // if doesn't have arguments you can just ignores parenthesis (optional)
 
 function add(a Int, b Int = 1) Int
 {
-  return a + b;
+  variable extra Int = 2;
+
+  function localFunction
+  {
+    trace("hello, i am a local function");
+  }
+  localFunction;
+
+  return a + b + extra;
 }
 
 function coolNumber Int return 5;
 
-trace(add(2, 2)); // 2 + 2 = 4
-trace(add(2)); // 2 + 1 = 3
-trace(add(2, coolNumber())); // 2 + 5 = 7
+trace(add(2, 2)); // 2 + 2 + 2 = 6
+trace(add(2)); // 2 + 1 + 2 = 5
+trace(add(2, coolNumber())); // 2 + 5 + 2 = 9
