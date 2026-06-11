@@ -9,7 +9,14 @@ class InfiScriptUtils
         "static", "inline", "final",
         "variable", "function",
         "if", "else", "for", "while", "do", "try", "catch", "switch", "case",
+        "return", "continue", "break",
         "true", "false"
+    ];
+
+    public static var fieldKeywords:Array<String> = [
+        "public", "private",
+        "static", "inline", "final",
+        "variable", "function"
     ];
 
     public static var reservedFunctions:Array<String> = ["trace"];

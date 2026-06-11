@@ -1,0 +1,17 @@
+function simple // if doesn't have arguments you can just ignores parenthesis (optional)
+{
+  trace("hello, i am a simple function");
+}
+
+simple; // if doesn't have arguments you can just ignores parenthesis (optional)
+
+function add(a Int, b Int = 1) Int
+{
+  return a + b;
+}
+
+function coolNumber Int return 5;
+
+trace(add(2, 2)); // 2 + 2 = 4
+trace(add(2)); // 2 + 1 = 3
+trace(add(2, coolNumber())); // 2 + 5 = 7

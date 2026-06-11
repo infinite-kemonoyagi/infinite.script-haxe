@@ -210,6 +210,7 @@ class InfiScriptLexer
             case "}": return new InfiScriptToken(RBrace, line, position, peek());
             case ",": return new InfiScriptToken(Comma, line, position, peek());
             case ".": return new InfiScriptToken(Dot, line, position, peek());
+            case "?": return new InfiScriptToken(Question, line, position, peek());
         }
 
         return null;

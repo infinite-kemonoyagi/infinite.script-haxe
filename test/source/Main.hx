@@ -1,6 +1,5 @@
 package;
 
-import infinite.script.interpreter.InfiScriptLexer;
 import infinite.script.parser.InfiScriptParser;
 import sys.io.File;
 
@@ -8,7 +7,6 @@ class Main
 {
     public static function main():Void
     {
-        final lexer:InfiScriptLexer = new InfiScriptLexer();
         final parser:InfiScriptParser = new InfiScriptParser();
 
         trace("Basic operations code:");
@@ -17,6 +15,10 @@ class Main
 
         trace("Variable code:");
         final code:String = File.getContent('./debug/Variable.infiscript');
-        parser.runScriptedCode(code);
+        parser.runScriptedCode(code, true, true);
+
+        trace("Function code:");
+        final code:String = File.getContent('./debug/Function.infiscript');
+        parser.runScriptedCode(code, true, true);
     }
 }

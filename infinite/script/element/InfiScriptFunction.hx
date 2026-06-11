@@ -63,6 +63,11 @@ class InfiScriptFunction extends InfiScriptField
      */
     public var arguments:Null<StringMap<InfiScriptVariable>>;
 
+    public var tokensParsed:Bool = false;
+
+    public var localFunctions:StringMap<InfiScriptFunction>;
+    public var localVariables:StringMap<InfiScriptVariable>;
+
     public function new(name:String, type:String, ?arguments:StringMap<InfiScriptVariable>)
     {
         super(name);
@@ -74,6 +79,8 @@ class InfiScriptFunction extends InfiScriptField
             argumentList = [];
             for (argument in arguments) argumentList.push(argument);
         }
+        localFunctions = new StringMap();
+        localVariables = new StringMap();
     }
 
     public function call(?arguments:Array<Any>)

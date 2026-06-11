@@ -44,6 +44,9 @@ class InfiScriptVariable extends InfiScriptField
      */
     public var setter:Null<Any->Null<Any>>;
 
+    public var isArgument:Bool = false;
+    public var isOptional:Bool = false;
+
     public function new(name:String, type:Null<String>, value:Null<Any>, ?getter:Void->Null<Any>, ?setter:Any->Null<Any>)
     {
         super(name);
@@ -52,5 +55,11 @@ class InfiScriptVariable extends InfiScriptField
         this.type ??= type ?? "Dynamic";
         this.getter ??= getter ?? () -> value;
         this.setter ??= setter ?? (newValue:Any) -> value = newValue;
+    }
+
+    public function setAsArgument(isArgument:Bool, isOptional:Bool):Void
+    {
+        this.isArgument = isArgument;
+        this.isOptional = isOptional;
     }
 }

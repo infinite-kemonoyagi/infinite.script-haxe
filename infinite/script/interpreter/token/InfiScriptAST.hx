@@ -146,6 +146,10 @@ enum InfiScriptAST
      * .
      */
     Dot;
+    /**
+     * ?
+     */
+    Question;
 
     /**
      * The end of the file
