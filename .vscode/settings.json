@@ -6,6 +6,11 @@
   // this is temporal... anyways, the script language has a similar syntax than haxe
   "files.associations": { "*.infiscript": "haxe" },
 
+  "[haxe]": {
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
+  },
+
   "prettier.tabWidth": 2,
   "editor.tabSize": 2,
 

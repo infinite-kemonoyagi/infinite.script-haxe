@@ -15,6 +15,8 @@ import infinite.script.util.InfiScriptUtils;
 class InfiScriptParser
 {
   public var lexer:InfiScriptLexer;
+  public var context:InfiScriptContext;
+  public var converter:InfiScriptConverter;
 
   public var position:Int;
 
@@ -25,7 +27,7 @@ class InfiScriptParser
 
   public function runScriptedCode(code:String, traceData:Bool = false):Void
   {
-    position = 0;
+    /*position = 0;
     #if !debug traceData = false; #end
 
     if (traceData)
@@ -160,10 +162,10 @@ class InfiScriptParser
       }
 
       ++position;
-    }
+    }*/
   }
 
-  private function createField():InfiScriptField
+  /*private function createField():InfiScriptField
   {
     var isVisible:Bool = false;
     var isStatic:Bool = false;
@@ -182,45 +184,9 @@ class InfiScriptParser
       }
       ++position;
     } while (isVariable == null);
+
     if (isVariable)
     {
-      if (peek().type != InfiScriptAST.Identifier) throw 'variable must have a name';
-      name = peek().source;
-
-      ++position;
-
-      var type:String = "";
-      var value:Null<Any> = null;
-
-      if (peek().type == InfiScriptAST.Semicolon)
-      {
-        type = "Dynamic";
-        value = null;
-      }
-      else if (peek().type == InfiScriptAST.Equal)
-      {
-        if (next().source != "new")
-        {
-          type = getDynamicType();
-          value = getValue();
-        }
-      }
-      else
-      {
-        type = peek().source;
-        ++position;
-
-        if (peek().type == InfiScriptAST.Equal)
-        {
-          if (next().source != "new") value = getValue();
-        }
-      }
-
-      final variable:InfiScriptVariable = new InfiScriptVariable(
-        name,
-        type,
-        value
-      );
       return variable;
     }
 
@@ -322,7 +288,7 @@ class InfiScriptParser
       case ArrayValue:  null; // nothing at the moment...
       default: throw 'Syntax error';
     };
-  }
+  }*/
 
   private inline function isAtTheEnd():Bool return position >= lexer.tokens.length;
 

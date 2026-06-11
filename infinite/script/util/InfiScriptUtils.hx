@@ -8,10 +8,15 @@ class InfiScriptUtils
         "public", "private",
         "static", "inline", "final",
         "variable", "function",
-        "if", "else", "for", "while", "do", "try", "catch", "switch", "case"
+        "if", "else", "for", "while", "do", "try", "catch", "switch", "case",
+        "true", "false"
     ];
 
     public static var reservedFunctions:Array<String> = ["trace"];
+
+    public static final booleanValues:Array<String> = [
+        "true", "false", "0", "1"
+    ];
 
     public static final operatorsEqual:Array<String> = [
         "+=",
