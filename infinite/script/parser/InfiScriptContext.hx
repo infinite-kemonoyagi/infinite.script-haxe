@@ -150,7 +150,7 @@ class InfiScriptContext
       bodyTokens.push(peek());
       increasePosition();
     }
-    while (peek().type == end);
+    while (peek().type != end);
 
     if (couldBeVoid && returns == "Dynamic") returns = "Void";
 
@@ -158,7 +158,6 @@ class InfiScriptContext
     func.tokens = bodyTokens;
     func.setFieldData(isVisible, isStatic, isFinal);
     if (!isLocal) functions.set(name, func);
-    increasePosition();
 
     return func;
   }

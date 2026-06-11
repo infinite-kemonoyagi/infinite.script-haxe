@@ -11,7 +11,7 @@ class TraceFunction extends InfiScriptFunction
         final arguments:StringMap<InfiScriptVariable> = [
             "value" => new InfiScriptVariable("value", "Dynamic", null)
         ];
-        super("name", "Void", arguments);
+        super("trace", "Void", arguments);
     }
 
     public override function call(?arguments:Array<Any>)

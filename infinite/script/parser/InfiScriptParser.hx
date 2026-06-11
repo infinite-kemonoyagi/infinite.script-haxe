@@ -15,8 +15,6 @@ class InfiScriptParser
 
   public var position:Int;
 
-  public var positionsToIgnore:Array<Int>;
-
   public function new(?lexer:InfiScriptLexer, ?context:InfiScriptContext, ?converter:InfiScriptConverter)
   {
     this.lexer ??= lexer ?? new InfiScriptLexer();
@@ -49,7 +47,7 @@ class InfiScriptParser
     }
 
     context.destroy(); // reset context
-    createFields();
+    createGlobalFields();
 
     if (debugMode)
     {
@@ -67,11 +65,10 @@ class InfiScriptParser
     }
   }
 
-  private function createFields():Void
+  private function createGlobalFields():Void
   {
     context.functions.set("trace", new TraceFunction());
 
-    positionsToIgnore = [];
     while (!isAtTheEnd())
     {
       final token:InfiScriptToken = peek();
@@ -84,27 +81,14 @@ class InfiScriptParser
 
       final initialPosition:Int = position;
       context.createField();
-      for (num in initialPosition...position) positionsToIgnore.push(num);
-
-      ++position;
+      final differencePosition:Int = position - initialPosition;
+      lexer.tokens.splice(initialPosition, differencePosition + 1);
+      position -= differencePosition;
     }
     position = 0;
   }
 
-  private function increasePosition(?value:Int = 1):Int
-  {
-    var skip:Int = 0;
-    if (positionsToIgnore.contains(position + value))
-    {
-      skip = position + value + 1;
-      do
-      {
-        ++skip;
-      }
-      while (positionsToIgnore.contains(position + value));
-    }
-    return position += value + skip;
-  }
+  private function increasePosition(?value:Int = 1):Int return position += value;
 
   private inline function isAtTheEnd():Bool return position >= lexer.tokens.length;
 
